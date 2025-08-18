@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -28,6 +29,12 @@ export function MapView({
   selectedListingId,
   onSelectListing,
 }: MapViewProps) {
+  const [isClient, setIsClient] = React.useState(false);
+  
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   const selectedListing = React.useMemo(
     () => listings.find((l) => l.id === selectedListingId),
     [listings, selectedListingId]
@@ -66,40 +73,43 @@ export function MapView({
 
   return (
     <div className="flex-1 bg-gray-300 relative overflow-hidden">
-      <MapContainer
-        center={defaultPosition}
-        zoom={defaultZoom}
-        scrollWheelZoom={true}
-        style={{ height: "100%", width: "100%", zIndex: 0 }}
-      >
-        {selectedListing && <ChangeView center={[selectedListing.location.lat, selectedListing.location.lng]} zoom={14} />}
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {listings.map((listing) => {
-          const isSelected = listing.id === selectedListingId;
-          return (
-            <Marker
-              key={listing.id}
-              position={[listing.location.lat, listing.location.lng]}
-              icon={createIcon(isSelected)}
-              eventHandlers={{
-                click: () => {
-                  onSelectListing(listing.id);
-                },
-              }}
-            >
-              <Popup>
-                <div className="font-sans">
-                  <h3 className="font-bold text-base mb-1">{listing.title}</h3>
-                  <p className="text-sm text-muted-foreground">{listing.address}</p>
-                </div>
-              </Popup>
-            </Marker>
-          );
-        })}
-      </MapContainer>
+      {isClient && (
+        <MapContainer
+          key={selectedListingId} // Add key to force re-render on selection change
+          center={defaultPosition}
+          zoom={defaultZoom}
+          scrollWheelZoom={true}
+          style={{ height: "100%", width: "100%", zIndex: 0 }}
+        >
+          {selectedListing && <ChangeView center={[selectedListing.location.lat, selectedListing.location.lng]} zoom={14} />}
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {listings.map((listing) => {
+            const isSelected = listing.id === selectedListingId;
+            return (
+              <Marker
+                key={listing.id}
+                position={[listing.location.lat, listing.location.lng]}
+                icon={createIcon(isSelected)}
+                eventHandlers={{
+                  click: () => {
+                    onSelectListing(listing.id);
+                  },
+                }}
+              >
+                <Popup>
+                  <div className="font-sans">
+                    <h3 className="font-bold text-base mb-1">{listing.title}</h3>
+                    <p className="text-sm text-muted-foreground">{listing.address}</p>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          })}
+        </MapContainer>
+      )}
       <div className="absolute bottom-4 right-4 bg-background/70 backdrop-blur-sm p-2 rounded-lg shadow-lg z-10">
         <p className="text-xs text-muted-foreground">
           Map data &copy; OpenStreetMap contributors.
