@@ -1,0 +1,52 @@
+import type { Listing } from "./types";
+
+export const mockListings: Listing[] = [
+  {
+    id: "lst_001",
+    title: "Beachside Plot in ECR",
+    description: "A stunning plot of land with direct beach access on East Coast Road. Perfect for a luxury villa or a weekend getaway home. Clear title and ready for immediate construction.",
+    price: 25000000,
+    negotiable: true,
+    areaSqFt: 4800,
+    landType: "residential",
+    location: { lat: 12.9324, lng: 80.2583 },
+    image: "https://placehold.co/600x400.png",
+    address: "123 East Coast Road, Injambakkam, Chennai, Tamil Nadu 600115",
+  },
+  {
+    id: "lst_002",
+    title: "Commercial Land in Guindy",
+    description: "Prime commercial land located in the heart of the Guindy industrial estate. Ideal for setting up a corporate office, showroom, or a tech park. Excellent connectivity to the airport and major city hubs.",
+    price: 80000000,
+    negotiable: false,
+    areaSqFt: 12000,
+    landType: "commercial",
+    location: { lat: 13.0076, lng: 80.2073 },
+    image: "https://placehold.co/600x400.png",
+    address: "45 Grand Southern Trunk Rd, Guindy Industrial Estate, Chennai, Tamil Nadu 600032",
+  },
+  {
+    id: "lst_003",
+    title: "Lush Farmland near Tambaram",
+    description: "Fertile agricultural land with a dedicated water source, suitable for organic farming and horticulture. Located in a peaceful area just a short drive from Tambaram.",
+    price: 7500000,
+    negotiable: true,
+    areaSqFt: 87120, // 2 acres
+    landType: "agricultural",
+    location: { lat: 12.9248, lng: 80.0883 },
+    image: "https://placehold.co/600x400.png",
+    address: "Green Valley Farms, Vandalur-Kelambakkam Road, Chennai, Tamil Nadu 600127",
+  },
+  {
+    id: "lst_004",
+    title: "Residential Plot in Anna Nagar",
+    description: "A well-proportioned residential plot in the desirable and well-established Anna Nagar locality. Perfect for building your dream family home. Close to top schools, parks, and shopping centers.",
+    price: 45000000,
+    negotiable: false,
+    areaSqFt: 2400,
+    landType: "residential",
+    location: { lat: 13.0858, lng: 80.2112 },
+    image: "https://placehold.co/600x400.png",
+    address: "Plot 55, 4th Main Road, Anna Nagar West, Chennai, Tamil Nadu 600040",
+  },
+];
