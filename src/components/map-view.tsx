@@ -17,7 +17,9 @@ interface MapViewProps {
 // Custom hook to update map view when selected listing changes
 const ChangeView = ({ center, zoom }: { center: L.LatLngExpression, zoom: number }) => {
   const map = useMap();
-  map.setView(center, zoom);
+  React.useEffect(() => {
+    map.setView(center, zoom);
+  }, [center, zoom, map]);
   return null;
 }
 
@@ -61,10 +63,6 @@ export function MapView({
       popupAnchor: [0, -40]
     });
   };
-
-  if (typeof window === 'undefined') {
-    return <div className="flex-1 bg-gray-300 animate-pulse" />;
-  }
 
   return (
     <div className="flex-1 bg-gray-300 relative overflow-hidden">

@@ -5,9 +5,14 @@ import type { Listing } from "@/lib/types";
 import { mockListings } from "@/lib/mock-data";
 import { Header } from "@/components/header";
 import { ListingSidebar } from "@/components/listing-sidebar";
-import { MapView } from "@/components/map-view";
 import { ChatPanel } from "@/components/chat-panel";
 import { useToast } from "@/hooks/use-toast";
+import dynamic from "next/dynamic";
+
+const MapView = dynamic(() => import("@/components/map-view").then((mod) => mod.MapView), {
+  ssr: false,
+  loading: () => <div className="flex-1 bg-gray-300 animate-pulse" />,
+});
 
 export default function Home() {
   const [listings, setListings] = React.useState<Listing[]>(mockListings);

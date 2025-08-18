@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { useFormState, useFormStatus } from "react-dom";
+import { useActionState, useFormStatus } from "react-dom";
 import { askGeoBot } from "@/app/actions";
 import type { Listing } from "@/lib/types";
 
@@ -56,7 +56,7 @@ export function ChatPanel({ selectedListing }: ChatPanelProps) {
   const formRef = React.useRef<HTMLFormElement>(null);
   const { toast } = useToast();
 
-  const [state, formAction] = useFormState(askGeoBot, initialState);
+  const [state, formAction] = React.useActionState(askGeoBot, initialState);
 
   React.useEffect(() => {
     if (state.status === "error") {
