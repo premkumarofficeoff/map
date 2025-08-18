@@ -11,6 +11,7 @@ import dynamic from "next/dynamic";
 import type { MapViewProps } from "@/components/map-view";
 import type L from 'leaflet';
 
+// Dynamically import MapView with SSR disabled
 const MapView = dynamic<MapViewProps>(
   () => import("@/components/map-view").then((mod) => mod.MapView),
   {
