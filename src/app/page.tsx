@@ -8,14 +8,18 @@ import { ListingSidebar } from "@/components/listing-sidebar";
 import { ChatPanel } from "@/components/chat-panel";
 import { useToast } from "@/hooks/use-toast";
 import dynamic from "next/dynamic";
+import type { MapViewProps } from "@/components/map-view";
 
-const MapView = dynamic(() => import("@/components/map-view").then((mod) => mod.MapView), {
-  ssr: false,
-  loading: () => <div className="flex-1 bg-gray-300 animate-pulse" />,
-});
+const MapView = dynamic<MapViewProps>(
+  () => import("@/components/map-view").then((mod) => mod.MapView),
+  {
+    ssr: false,
+    loading: () => <div className="flex-1 bg-gray-300 animate-pulse" />,
+  }
+);
 
 export default function Home() {
-  const [listings, setListings] = React.useState<Listing[]>(mockListings);
+  const [listings] = React.useState<Listing[]>(mockListings);
   const [selectedListingId, setSelectedListingId] = React.useState<
     string | null
   >(mockListings[0]?.id || null);
@@ -50,7 +54,7 @@ export default function Home() {
         />
         <MapView
           listings={listings}
-          selectedListingId={selectedListingId}
+          selectedListing={selectedListing}
           onSelectListing={setSelectedListingId}
         />
       </main>

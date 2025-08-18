@@ -9,9 +9,9 @@ import { MapPin, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ReactDOMServer from "react-dom/server";
 
-interface MapViewProps {
+export interface MapViewProps {
   listings: Listing[];
-  selectedListingId: string | null;
+  selectedListing: Listing | null;
   onSelectListing: (id: string) => void;
 }
 
@@ -19,22 +19,19 @@ interface MapViewProps {
 const ChangeView = ({ center, zoom }: { center: L.LatLngExpression, zoom: number }) => {
   const map = useMap();
   React.useEffect(() => {
-    map.setView(center, zoom);
+    if (map) {
+      map.setView(center, zoom);
+    }
   }, [center, zoom, map]);
   return null;
 }
 
 export function MapView({
   listings,
-  selectedListingId,
+  selectedListing,
   onSelectListing,
 }: MapViewProps) {
   
-  const selectedListing = React.useMemo(
-    () => listings.find((l) => l.id === selectedListingId),
-    [listings, selectedListingId]
-  );
-
   const center: L.LatLngExpression = selectedListing
     ? [selectedListing.location.lat, selectedListing.location.lng]
     : [13.0827, 80.2707]; // Default to Chennai if no listing is selected
@@ -80,7 +77,7 @@ export function MapView({
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
           {listings.map((listing) => {
-            const isSelected = listing.id === selectedListingId;
+            const isSelected = listing.id === selectedListing?.id;
             return (
               <Marker
                 key={listing.id}
