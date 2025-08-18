@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -9,15 +8,17 @@ import { MapPin, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ReactDOMServer from "react-dom/server";
 
+const DEFAULT_CENTER: L.LatLngExpression = [13.0827, 80.2707];
+const DEFAULT_ZOOM = 10;
+const SELECTED_ZOOM = 14;
+
 export interface MapViewProps {
   listings: Listing[];
   selectedListing: Listing | null;
   onSelectListing: (id: string) => void;
-  center: L.LatLngExpression;
-  zoom: number;
 }
 
-// Custom component to update map view without re-rendering MapContainer
+// Custom component to update map view
 const ChangeView = ({ center, zoom }: { center: L.LatLngExpression, zoom: number }) => {
   const map = useMap();
   React.useEffect(() => {
@@ -26,39 +27,43 @@ const ChangeView = ({ center, zoom }: { center: L.LatLngExpression, zoom: number
   return null;
 }
 
+// Custom Icon rendering
+const createIcon = (isSelected: boolean) => {
+  return L.divIcon({
+    html: ReactDOMServer.renderToString(
+      <div className="relative flex flex-col items-center">
+          <MapPin
+            className={cn(
+              "h-10 w-10 drop-shadow-lg",
+              isSelected
+                ? "text-accent fill-accent/50"
+                : "text-primary fill-primary/50"
+            )}
+            strokeWidth={1.5}
+          />
+          {isSelected && (
+            <Star className="absolute -top-2 -right-2 h-5 w-5 text-yellow-400 fill-yellow-400" />
+          )}
+      </div>
+    ),
+    className: "bg-transparent border-0",
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+    popupAnchor: [0, -40]
+  });
+};
+
 export function MapView({
   listings,
   selectedListing,
   onSelectListing,
-  center,
-  zoom,
 }: MapViewProps) {
   
-  // Custom Icon rendering
-  const createIcon = (isSelected: boolean) => {
-    return L.divIcon({
-      html: ReactDOMServer.renderToString(
-        <div className="relative flex flex-col items-center">
-            <MapPin
-              className={cn(
-                "h-10 w-10 drop-shadow-lg",
-                isSelected
-                  ? "text-accent fill-accent/50"
-                  : "text-primary fill-primary/50"
-              )}
-              strokeWidth={1.5}
-            />
-            {isSelected && (
-              <Star className="absolute -top-2 -right-2 h-5 w-5 text-yellow-400 fill-yellow-400" />
-            )}
-        </div>
-      ),
-      className: "bg-transparent border-0",
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
-      popupAnchor: [0, -40]
-    });
-  };
+  const center = React.useMemo(() => selectedListing
+    ? [selectedListing.location.lat, selectedListing.location.lng] as L.LatLngExpression
+    : DEFAULT_CENTER, [selectedListing]);
+    
+  const zoom = React.useMemo(() => selectedListing ? SELECTED_ZOOM : DEFAULT_ZOOM, [selectedListing]);
 
   return (
     <div className="flex-1 bg-gray-300 relative overflow-hidden">
