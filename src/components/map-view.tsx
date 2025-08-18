@@ -29,21 +29,16 @@ export function MapView({
   selectedListingId,
   onSelectListing,
 }: MapViewProps) {
-  const [isClient, setIsClient] = React.useState(false);
-  
-  React.useEffect(() => {
-    setIsClient(true);
-  }, []);
   
   const selectedListing = React.useMemo(
     () => listings.find((l) => l.id === selectedListingId),
     [listings, selectedListingId]
   );
 
-  const defaultPosition: L.LatLngExpression = selectedListing
+  const center: L.LatLngExpression = selectedListing
     ? [selectedListing.location.lat, selectedListing.location.lng]
     : [13.0827, 80.2707]; // Default to Chennai if no listing is selected
-  const defaultZoom = selectedListing ? 14 : 10;
+  const zoom = selectedListing ? 14 : 10;
   
   // Custom Icon rendering
   const createIcon = (isSelected: boolean) => {
@@ -73,15 +68,13 @@ export function MapView({
 
   return (
     <div className="flex-1 bg-gray-300 relative overflow-hidden">
-      {isClient && (
         <MapContainer
-          key={selectedListingId} // Add key to force re-render on selection change
-          center={defaultPosition}
-          zoom={defaultZoom}
+          center={center}
+          zoom={zoom}
           scrollWheelZoom={true}
           style={{ height: "100%", width: "100%", zIndex: 0 }}
         >
-          {selectedListing && <ChangeView center={[selectedListing.location.lat, selectedListing.location.lng]} zoom={14} />}
+          <ChangeView center={center} zoom={zoom} />
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -109,7 +102,6 @@ export function MapView({
             );
           })}
         </MapContainer>
-      )}
       <div className="absolute bottom-4 right-4 bg-background/70 backdrop-blur-sm p-2 rounded-lg shadow-lg z-10">
         <p className="text-xs text-muted-foreground">
           Map data &copy; OpenStreetMap contributors.
