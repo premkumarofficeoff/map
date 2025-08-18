@@ -13,15 +13,15 @@ export interface MapViewProps {
   listings: Listing[];
   selectedListing: Listing | null;
   onSelectListing: (id: string) => void;
+  center: L.LatLngExpression;
+  zoom: number;
 }
 
-// Custom hook to update map view when selected listing changes
+// Custom component to update map view without re-rendering MapContainer
 const ChangeView = ({ center, zoom }: { center: L.LatLngExpression, zoom: number }) => {
   const map = useMap();
   React.useEffect(() => {
-    if (map) {
-      map.setView(center, zoom);
-    }
+    map.setView(center, zoom);
   }, [center, zoom, map]);
   return null;
 }
@@ -30,12 +30,9 @@ export function MapView({
   listings,
   selectedListing,
   onSelectListing,
+  center,
+  zoom,
 }: MapViewProps) {
-  
-  const center: L.LatLngExpression = selectedListing
-    ? [selectedListing.location.lat, selectedListing.location.lng]
-    : [13.0827, 80.2707]; // Default to Chennai if no listing is selected
-  const zoom = selectedListing ? 14 : 10;
   
   // Custom Icon rendering
   const createIcon = (isSelected: boolean) => {

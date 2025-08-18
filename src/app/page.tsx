@@ -9,6 +9,7 @@ import { ChatPanel } from "@/components/chat-panel";
 import { useToast } from "@/hooks/use-toast";
 import dynamic from "next/dynamic";
 import type { MapViewProps } from "@/components/map-view";
+import type L from 'leaflet';
 
 const MapView = dynamic<MapViewProps>(
   () => import("@/components/map-view").then((mod) => mod.MapView),
@@ -39,6 +40,12 @@ export default function Home() {
     () => listings.find((l) => l.id === selectedListingId) || null,
     [listings, selectedListingId]
   );
+  
+  const center: L.LatLngExpression = React.useMemo(() => selectedListing
+    ? [selectedListing.location.lat, selectedListing.location.lng]
+    : [13.0827, 80.2707], [selectedListing]);
+    
+  const zoom = React.useMemo(() => selectedListing ? 14 : 10, [selectedListing]);
 
   return (
     <div className="flex flex-col h-screen bg-background font-body">
@@ -56,6 +63,8 @@ export default function Home() {
           listings={listings}
           selectedListing={selectedListing}
           onSelectListing={setSelectedListingId}
+          center={center}
+          zoom={zoom}
         />
       </main>
       <ChatPanel selectedListing={selectedListing} />
